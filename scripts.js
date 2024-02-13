@@ -16,7 +16,7 @@ function sneakerBar(text, background) {
   setTimeout(function () {
     sneakerbar.style.display = "none";
     if (changed) {
-      sneakerbar.style.backgroundColor = "#4CAF50";
+      sneakerbar.style.backgroundColor = "#fa8334";
     }
   }, 2000);
 }
@@ -43,7 +43,7 @@ createBtn.addEventListener("click", () => {
   img.src = "images/d.png";
   notesContainer.appendChild(inputBox).appendChild(img);
   updateStorage();
-  sneakerBar();
+  sneakerBar("Note Added");
 });
 
 notesContainer.addEventListener("click", function (e) {
@@ -54,12 +54,36 @@ notesContainer.addEventListener("click", function (e) {
   } else if (e.target.tagName === "P") {
     notes = document.querySelectorAll(".input-box");
     notes.forEach((nt) => {
+      let timeoutId;
       nt.onkeyup = function () {
+        clearTimeout(timeoutId);
         updateStorage();
-        sneakerBar("Changes saved!");
+        timeoutId = setTimeout(function () {
+          sneakerBar("Changes saved!");
+        }, 2000);
       };
     });
   }
+});
+
+notes.forEach((notes) => {
+  notes.addEventListener("click", function (e) {
+    if (!notes.textContent.trim()) {
+      const selection = window.getSelection();
+      const range = document.createRange();
+      range.setStart(inputBox, 0);
+      range.collapse(true);
+      selection.removeAllRanges();
+      selection.addRange(range);
+    } else {
+      const selection = window.getSelection();
+      const range = document.createRange();
+      range.selectNodeContents(inputBox);
+      range.collapse(false);
+      selection.removeAllRanges();
+      selection.addRange(range);
+    }
+  });
 });
 
 document.addEventListener("keydown", (event) => {
